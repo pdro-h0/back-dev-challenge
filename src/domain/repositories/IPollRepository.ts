@@ -13,6 +13,8 @@ export interface IPollRepository {
   }): Promise<Poll>;
 
   getAll(): Promise<Poll[]>;
-  
+
   getByStatus(status: string): Promise<Poll[]>;
+
+  edit(request: Partial<Poll>): Promise<Poll>;
 }

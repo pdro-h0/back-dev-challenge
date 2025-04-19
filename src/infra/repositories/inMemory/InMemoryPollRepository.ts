@@ -46,4 +46,15 @@ export class InMemoryPollRepository implements IPollRepository {
   async getByStatus(status: string): Promise<Poll[]> {
     return await this.items.filter((item) => item.status === status);
   }
+
+  async edit(request: Partial<Poll>): Promise<Poll> {
+    const pollIndex = this.items.findIndex((poll) => poll.id === request.id);
+
+    if (pollIndex === -1) throw new Error("Poll not found");
+
+    return (this.items[pollIndex] = {
+      ...this.items[pollIndex],
+      ...request,
+    });
+  }
 }
