@@ -16,5 +16,9 @@ export interface IPollRepository {
 
   getByStatus(status: string): Promise<Poll[]>;
 
+  getById(id: string): Promise<Poll | null>;
+
   edit(request: Partial<Poll>): Promise<Poll>;
+
+  delete(id: string): Promise<void>;
 }

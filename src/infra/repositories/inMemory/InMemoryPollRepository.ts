@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { Options } from "../../../domain/entities/Options";
 import { Poll } from "../../../domain/entities/Poll";
 import { Status } from "../../../domain/enums/Status";
@@ -14,21 +13,6 @@ export class InMemoryPollRepository implements IPollRepository {
     endDate: Date;
     options: { text: string; votes: number }[];
   }): Promise<Poll> {
-    // const newPoll = {
-    //   id: randomUUID(),
-    //   question: request.question,
-    //   status: (request.status as Status) ?? Status.NOT_STARTED,
-    //   startDate: request.startDate ?? new Date(),
-    //   endDate: request.endDate ?? new Date(),
-    //   options: request.options.map((option) => {
-    //     return {
-    //       id: randomUUID(),
-    //       text: option.text,
-    //       votes: option.votes,
-    //     };
-    //   }),
-    // };
-
     const newPoll = Poll.create(
       request.question,
       request.status as Status,
@@ -47,6 +31,10 @@ export class InMemoryPollRepository implements IPollRepository {
     return await this.items.filter((item) => item.status === status);
   }
 
+  async getById(id: string): Promise<Poll | null> {
+    return (await this.items.find((item) => item.id === id)) ?? null;
+  }
+
   async edit(request: Partial<Poll>): Promise<Poll> {
     const pollIndex = this.items.findIndex((poll) => poll.id === request.id);
 
@@ -56,5 +44,9 @@ export class InMemoryPollRepository implements IPollRepository {
       ...this.items[pollIndex],
       ...request,
     });
+  }
+
+  async delete(id: string): Promise<void> {
+    this.items = this.items.filter((poll) => poll.id !== id);
   }
 }
