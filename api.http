@@ -24,16 +24,11 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:3333/polls
+GET http://localhost:3333/all-polls
 ###
 
 
-GET http://localhost:3333/polls/status
-Content-Type: application/json
-
-{
-    "status": "IN_PROGRESS"
-}
+GET http://localhost:3333/polls?status=IN_PROGRESS
 ###
 
 
@@ -75,7 +70,7 @@ Content-Type: application/json
 
 
 
-DELETE http://localhost:3333/poll/e2f7b0b4-6162-412a-9885-eb4a487f6410
+DELETE http://localhost:3333/poll/cfb6c1fa-9fd0-4115-b909-79fa226d9377
 ###
 
 
