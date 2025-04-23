@@ -11,8 +11,8 @@ import { addOptionToPollController } from "./addOptionToPollController";
 const route = express.Router();
 
 route.post("/polls", createPollController);
-route.get("/polls", getAllPollsController);
-route.get("/polls/status", getPollsByStatusController);
+route.get("/all-polls", getAllPollsController);
+route.get("/polls", getPollsByStatusController);
 route.put("/poll/:id", editPollController);
 route.delete("/poll/:id", deletePollController);
 route.put("/poll/:id/option", addOptionToPollController);
