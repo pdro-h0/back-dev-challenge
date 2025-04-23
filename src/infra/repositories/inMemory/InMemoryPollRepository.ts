@@ -49,4 +49,13 @@ export class InMemoryPollRepository implements IPollRepository {
   async delete(id: string): Promise<void> {
     this.items = this.items.filter((poll) => poll.id !== id);
   }
+
+  async addOption(
+    request: { text: string; votes: number },
+    id: string
+  ): Promise<void> {
+    this.items
+      .find((poll) => poll.id === id)
+      ?.options.push(Options.create(request.text, request.votes));
+  }
 }

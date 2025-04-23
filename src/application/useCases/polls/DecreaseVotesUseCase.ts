@@ -15,16 +15,19 @@ export class DecreaseVotesUseCase {
 
     if (!option) throw new Error("Option not found");
 
-    await this.pollRepository.edit({
-      ...poll,
-      options: poll.options.map((option) =>
-        option.id === optionId
-          ? {
-              ...option,
-              votes: option.votes - 1,
-            }
-          : option
-      ),
-    });
+    await this.pollRepository.edit(
+      {
+        ...poll,
+        options: poll.options.map((option) =>
+          option.id === optionId
+            ? {
+                ...option,
+                votes: option.votes - 1,
+              }
+            : option
+        ),
+      },
+      optionId
+    );
   }
 }

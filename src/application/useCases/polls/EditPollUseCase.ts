@@ -5,11 +5,25 @@ import { IPollRepository } from "../../../domain/repositories/IPollRepository";
 export class EditPollUseCase {
   constructor(private readonly pollRepository: IPollRepository) {}
 
-  async execute(request: Partial<Poll>): Promise<IResponseEditPoll> {
-    const poll = await this.pollRepository.edit(request);
+  async execute(
+    request: Partial<Poll>,
+    id: string,
+    optionId?: string
+  ): Promise<IResponseEditPoll> {
+    const poll = await this.pollRepository.getById(id);
+
+    if (!poll) throw new Error("poll not found");
+
+    const pollEdited = await this.pollRepository.edit(
+      {
+        ...request,
+        id: poll.id,
+      },
+      optionId
+    );
 
     return {
-      poll,
+      poll: pollEdited,
     };
   }
 }

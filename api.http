@@ -1,0 +1,89 @@
+POST http://localhost:3333/polls
+Content-Type: application/json
+
+{
+    "question": "Qual o melhor filme?",
+    "status": "IN_PROGRESS",
+    "startDate": "2026-04-27",
+    "endDate": "2026-04-25",
+    "options": [
+        {
+         "text": "Filme - 1",
+         "votes": 0
+        },
+        {
+            "text": "Filme - 2",
+            "votes": 0
+        },
+        {
+            "text": "Filme - 3",
+            "votes": 0
+        }
+    ]
+}       
+###
+
+
+GET http://localhost:3333/polls
+###
+
+
+GET http://localhost:3333/polls/status
+Content-Type: application/json
+
+{
+    "status": "IN_PROGRESS"
+}
+###
+
+
+
+PUT http://localhost:3333/poll/466f8556-d6e6-4c04-94d3-c38c1d9e50f1
+Content-Type: application/json
+
+{
+    "question": "Qual o melhor filme de terror?",
+    "options": [
+        {
+         "text": "Filme de terror - 1",
+         "votes": 0
+        },
+        {
+            "text": "Filme de terror - 2",
+            "votes": 0
+        },
+        {
+            "text": "Filme de terror - 3",
+            "votes": 0
+        },
+    ]
+    
+}
+###
+
+
+
+PUT http://localhost:3333/poll/466f8556-d6e6-4c04-94d3-c38c1d9e50f1/option
+Content-Type: application/json
+
+{
+    "text": "Filme de terror - 4",
+    "votes": 0
+}
+###
+
+
+
+
+DELETE http://localhost:3333/poll/e2f7b0b4-6162-412a-9885-eb4a487f6410
+###
+
+
+
+PUT http://localhost:3333/poll/466f8556-d6e6-4c04-94d3-c38c1d9e50f1/option/e2f7b0b4-6162-412a-9885-eb4a487f6410/increase
+###
+
+
+
+PUT http://localhost:3333/poll/466f8556-d6e6-4c04-94d3-c38c1d9e50f1/option/64a40ebe-89ac-4d17-9c8d-513c1a74af38/decrease
+###
