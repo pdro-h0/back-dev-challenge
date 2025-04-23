@@ -1,19 +1,19 @@
-import { beforeEach, it, describe, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { IPollRepository } from "../src/domain/repositories/IPollRepository";
 import { InMemoryPollRepository } from "../src/infra/repositories/inMemory/InMemoryPollRepository";
-import { EditPollUseCase } from "../src/application/useCases/polls/EditPollUseCase";
-import { Status } from "../src/domain/enums/Status";
+import { CreatePollUseCase } from "../src/application/useCases/polls/CreatePollUseCase";
+import { AddOptionToPollUseCase } from "../src/application/useCases/polls/AddOptionToPollUseCase";
 
 let pollRepository: IPollRepository;
-let sut: EditPollUseCase;
+let sut: AddOptionToPollUseCase;
 
-describe("EDIT POLL", () => {
+describe("ADD OPTION TO POLL", () => {
   beforeEach(async () => {
     pollRepository = new InMemoryPollRepository();
-    sut = new EditPollUseCase(pollRepository);
+    sut = new AddOptionToPollUseCase(pollRepository);
   });
 
-  it("Should be able to edit a poll", async () => {
+  it("should add an option to a poll", async () => {
     const pollCreated = await pollRepository.create({
       question: "Nova questão",
       status: "não iniciado",
@@ -35,16 +35,15 @@ describe("EDIT POLL", () => {
       ],
     });
 
-    const { poll } = await sut.execute(
-      {
-        question: "Nova questão editada",
-        status: Status.IN_PROGRESS,
-      },
-      pollCreated.id,
-      pollCreated.options[0].id
-    );
+    const input = {
+      text: "nova opção",
+      votes: 0,
+    };
 
-    expect(poll.question).toBe("Nova questão editada");
-    expect(poll.status).toBe("em andamento");
+    await sut.execute(input, pollCreated.id);
+
+    expect(pollCreated.options.length).toBe(4);
+    expect(pollCreated.options[3].text).toBe("nova opção");
+    expect(pollCreated.options[3].votes).toBe(0);
   });
 });

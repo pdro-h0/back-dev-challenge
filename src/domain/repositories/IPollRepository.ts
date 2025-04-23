@@ -18,7 +18,15 @@ export interface IPollRepository {
 
   getById(id: string): Promise<Poll | null>;
 
-  edit(request: Partial<Poll>): Promise<Poll>;
+  edit(request: Partial<Poll>, optionId?: string): Promise<Poll>;
 
   delete(id: string): Promise<void>;
+
+  addOption(
+    request: {
+      text: string;
+      votes: number;
+    },
+    id: string
+  ): Promise<void>;
 }

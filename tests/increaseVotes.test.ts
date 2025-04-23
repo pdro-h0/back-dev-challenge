@@ -33,7 +33,10 @@ describe("INCREASE VOTES", () => {
       ],
     });
 
-    await sut.execute(pollCreated.id, pollCreated.options[0].id);
+    const pollEdited = await sut.execute(
+      pollCreated.id,
+      pollCreated.options[0].id
+    );
 
     expect(pollRepository.items[0].options[0].votes).toBe(1);
     expect(pollRepository.items[0].options[1].votes).toBe(5);

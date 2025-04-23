@@ -36,8 +36,6 @@ describe("CREATE POLL", () => {
 
     const { poll } = await sut.execute(input);
 
-    console.log(poll);
-
     expect(poll.id).toEqual(expect.any(String));
     expect(poll.question).toEqual(input.question);
     expect(poll.options).toHaveLength(3);
