@@ -8,23 +8,12 @@ export const getPollsByStatusController: RequestHandler = async (req, res) => {
     status: z.enum(["NOT_STARTED", "STARTED", "IN_PROGRESS", "FINISHED"]),
   });
 
-  const querySchema = getPollsByStatusSchema.safeParse(req.query);
+  const querySchema = getPollsByStatusSchema.parse(req.query);
 
-  if (!querySchema.success) {
-    res.status(400).json({ error: querySchema.error.message });
-    return;
-  }
+  const { status } = querySchema;
+  const useCase = new GetPollsByStatusUseCase(new PrismaPollRepository());
+  const polls = await useCase.execute(status);
 
-  try {
-    const { status } = querySchema.data;
-    const useCase = new GetPollsByStatusUseCase(new PrismaPollRepository());
-    const polls = await useCase.execute(status);
-
-    res.status(200).json(polls);
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
-  }
+  res.status(200).json(polls);
+  return;
 };

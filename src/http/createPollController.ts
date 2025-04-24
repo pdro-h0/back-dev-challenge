@@ -17,31 +17,20 @@ export const createPollController: RequestHandler = async (req, res) => {
     ),
   });
 
-  const bodySchema = createPollBodySchema.safeParse(req.body);
+  const bodySchema = createPollBodySchema.parse(req.body);
 
-  if (!bodySchema.success) {
-    res.status(400).json({ error: bodySchema.error.message });
-    return;
-  }
+  const { question, status, startDate, endDate, options } = bodySchema;
 
-  try {
-    const { question, status, startDate, endDate, options } = bodySchema.data;
+  const useCase = new CreatePollUseCase(new PrismaPollRepository());
 
-    const useCase = new CreatePollUseCase(new PrismaPollRepository());
+  const { poll } = await useCase.execute({
+    question,
+    status,
+    startDate,
+    endDate,
+    options,
+  });
 
-    const { poll } = await useCase.execute({
-      question,
-      status,
-      startDate,
-      endDate,
-      options,
-    });
-
-    res.status(201).json(poll);
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
-  }
+  res.status(201).json(poll);
+  return;
 };

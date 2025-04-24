@@ -13,22 +13,12 @@ export const addOptionToPollController: RequestHandler = async (req, res) => {
     id: z.string().uuid(),
   });
 
-  const bodySchema = addOptionToPollBodySchema.safeParse(req.body);
-  const paramsSchema = addOptionToPollParamsSchema.safeParse(req.params);
-
-  if (!bodySchema.success) {
-    res.status(400).json({ error: bodySchema.error.message });
-    return;
-  }
-
-  if (!paramsSchema.success) {
-    res.status(400).json({ error: paramsSchema.error.message });
-    return;
-  }
+  const bodySchema = addOptionToPollBodySchema.parse(req.body);
+  const paramsSchema = addOptionToPollParamsSchema.parse(req.params);
 
   try {
-    const { text, votes } = bodySchema.data;
-    const { id } = paramsSchema.data;
+    const { text, votes } = bodySchema;
+    const { id } = paramsSchema;
 
     const useCase = new AddOptionToPollUseCase(new PrismaPollRepository());
 
