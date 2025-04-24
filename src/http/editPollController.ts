@@ -26,42 +26,26 @@ export const editPollController: RequestHandler = async (req, res) => {
     optionId: z.string().uuid().optional(),
   });
 
-  const bodySchema = editPollBodySchema.safeParse(req.body);
-  const paramsSchema = editPollParamsSchema.safeParse(req.params);
+  const bodySchema = editPollBodySchema.parse(req.body);
+  const paramsSchema = editPollParamsSchema.parse(req.params);
 
-  if (!paramsSchema.success) {
-    res.status(400).json({ error: paramsSchema.error });
-    return;
-  }
+  const { question, status, startDate, endDate, options } = bodySchema;
+  const { id, optionId } = paramsSchema;
 
-  if (!bodySchema.success) {
-    res.status(400).json({ error: bodySchema.error });
-    return;
-  }
+  const useCase = new EditPollUseCase(new PrismaPollRepository());
 
-  try {
-    const { question, status, startDate, endDate, options } = bodySchema.data;
-    const { id, optionId } = paramsSchema.data;
+  const { poll } = await useCase.execute(
+    {
+      question,
+      status,
+      startDate,
+      endDate,
+      options,
+    },
+    id,
+    optionId
+  );
 
-    const useCase = new EditPollUseCase(new PrismaPollRepository());
-
-    const { poll } = await useCase.execute(
-      {
-        question,
-        status,
-        startDate,
-        endDate,
-        options,
-      },
-      id,
-      optionId
-    );
-
-    res.status(200).json(poll);
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
-  }
+  res.status(200).json(poll);
+  return;
 };

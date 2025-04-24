@@ -8,23 +8,12 @@ export const deletePollController: RequestHandler = async (req, res) => {
     id: z.string().uuid(),
   });
 
-  const paramsSchema = deletePollParamsSchema.safeParse(req.params);
+  const paramsSchema = deletePollParamsSchema.parse(req.params);
 
-  if (!paramsSchema.success) {
-    res.status(400).json({ error: paramsSchema.error.message });
-    return;
-  }
+  const { id } = paramsSchema;
+  const useCase = new DeletePollUseCase(new PrismaPollRepository());
+  await useCase.execute(id);
 
-  try {
-    const { id } = paramsSchema.data;
-    const useCase = new DeletePollUseCase(new PrismaPollRepository());
-    await useCase.execute(id);
-
-    res.status(204).end();
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
-  }
+  res.status(204).end();
+  return;
 };

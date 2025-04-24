@@ -9,25 +9,14 @@ export const increaseVotesController: RequestHandler = async (req, res) => {
     optionId: z.string().uuid(),
   });
 
-  const paramsSchema = increaseVotesParamsSchema.safeParse(req.params);
+  const paramsSchema = increaseVotesParamsSchema.parse(req.params);
 
-  if (!paramsSchema.success) {
-    res.status(400).json({ error: paramsSchema.error });
-    return;
-  }
+  const { pollId, optionId } = paramsSchema;
 
-  try {
-    const { pollId, optionId } = paramsSchema.data;
+  const useCase = new IncreaseVotesUseCase(new PrismaPollRepository());
 
-    const useCase = new IncreaseVotesUseCase(new PrismaPollRepository());
+  await useCase.execute(pollId, optionId);
 
-    await useCase.execute(pollId, optionId);
-
-    res.status(204).end();
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
-  }
+  res.status(204).end();
+  return;
 };

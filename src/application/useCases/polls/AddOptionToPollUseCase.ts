@@ -1,4 +1,5 @@
 import { IPollRepository } from "../../../domain/repositories/IPollRepository";
+import { AppError } from "../../../http/middlewares/errorHandler";
 
 export class AddOptionToPollUseCase {
   constructor(private readonly pollRepository: IPollRepository) {}
@@ -12,7 +13,7 @@ export class AddOptionToPollUseCase {
   ) {
     const poll = await this.pollRepository.getById(id);
 
-    if (!poll) throw new Error("Poll not found");
+    if (!poll) throw new AppError(404, "Poll not found");
 
     await this.pollRepository.addOption(request, id);
   }

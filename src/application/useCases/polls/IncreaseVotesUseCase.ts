@@ -1,5 +1,6 @@
 import { Status } from "../../../domain/enums/Status";
 import { IPollRepository } from "../../../domain/repositories/IPollRepository";
+import { AppError } from "../../../http/middlewares/errorHandler";
 
 export class IncreaseVotesUseCase {
   constructor(private readonly pollRepository: IPollRepository) {}
@@ -7,13 +8,14 @@ export class IncreaseVotesUseCase {
   async execute(pollId: string, optionId: string) {
     const poll = await this.pollRepository.getById(pollId);
 
-    if (!poll) throw new Error("Poll not found");
+    if (!poll) throw new AppError(404, "Poll not found");
 
-    if (poll.status === Status.FINISHED) throw new Error("Poll is finished");
+    if (poll.status === Status.FINISHED)
+      throw new AppError(400, "Poll is finished");
 
     const option = poll.options.find((option) => option.id === optionId);
 
-    if (!option) throw new Error("Option not found");
+    if (!option) throw new AppError(404, "Option not found");
 
     await this.pollRepository.edit(
       {
